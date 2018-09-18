@@ -2,13 +2,17 @@ function dgraph() {
     var sd = document.getElementById("startdate").value;
     var ed = document.getElementById("enddate").value;
     var url = `http://flawsk-dev.eu-west-2.elasticbeanstalk.com/dates/${sd}/${ed}`
-//    var url = `http://127.0.0.2:5000/dates/${sd}/${ed}`
+//    var url = `http://127.0.0.1:5000/dates/${sd}/${ed}`
     document.getElementById("out").innerHTML = url;
     var splot = c3.generate({
         bindto: '#out',
         data: {
             type: 'line',
-            x: '0',
+            keys: {
+                x: 'time',
+                value:['low','open','close','high']
+            },
+            //x: 'time',
             xFormat: '%Y-%m-%d %H:%M:%S',
             url: url,
             mimeType: 'json'
@@ -24,6 +28,13 @@ function dgraph() {
         },
         point: {
             show: false
+        },
+        size: {
+            height: 600
+        },
+        zoom: {
+            enabled: true,
+            rescale: true
         }
     });
 }
@@ -32,7 +43,10 @@ var wplot = c3.generate({
     bindto: '#weekplot',
     data: {
         type: 'line',
-        x: '0',
+        keys: {
+            x: 'time',
+            value:['close']
+        },
         xFormat: '%Y-%m-%d %H:%M:%S',
         url: 'http://flawsk-dev.eu-west-2.elasticbeanstalk.com/jdatwavg',
 //        url: 'http://127.0.0.1:5000/jdatwavg',
@@ -63,7 +77,10 @@ var wplot = c3.generate({
 var volplot = c3.generate({
     bindto: '#dayplot',
     data: {
-        x: '0',
+        keys: {
+            x: 'time',
+            value:['vol']
+        },
         xFormat: '%Y-%m-%d %H:%M:%S',
         url: 'http://flawsk-dev.eu-west-2.elasticbeanstalk.com/jdatvol',
 //        url: 'http://127.0.0.1:5000/jdatvol',
@@ -82,11 +99,15 @@ var volplot = c3.generate({
     }
 });
 
+//=#-=#-=Displays weekly close average (depreciated)=#=-#=
 var plot = c3.generate({
     bindto: '#plot',
     data: {
         type: 'line',
-        x: '0',
+        keys: {
+            x: 'time',
+            value:['close']
+        },
         xFormat: '%Y-%m-%d %H:%M:%S',
         url: 'http://flawsk-dev.eu-west-2.elasticbeanstalk.com/jdatwcavg',
 //        url: 'http://127.0.0.1:5000/jdatwcavg',
@@ -108,6 +129,7 @@ var plot = c3.generate({
         height: 400
     }
 });
+
 
 var chart = c3.generate({
     bindto: '#chart',
